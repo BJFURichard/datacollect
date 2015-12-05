@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<link rel="stylesheet" href="css/amazeui.css">
+<!-- LOAD JQUERY -->
+<script src="js/jquery.js"></script>
+<!-- LOAD ANGULAR -->
+<script src="js/angular.min.js"></script>
+<style>
+    .header {
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 200%;
+      color: #333;
+      margin-top: 30px;
+    }
+    .header p {
+      font-size: 14px;
+    }
+	.help-block{color:red;}
+	pre{color:red;font-size: 14px;}
+	.am-topbar {
+	  position: relative;
+	  min-height: 50px;
+	  margin-bottom: 1.6rem;
+	  background: #94cffb;
+	  border-width: 0 0 1px;
+	  border-style: solid;
+	  border-color: #94cffb;
+	  color: #000;
+	}
+</style>
+<script>
+	// define angular module/app
+	var formApp = angular.module('formApp', []);
+	// create angular controller and pass in $scope and $http
+	formApp.controller("formController",function($scope, $http){
+		// create a blank object to hold our form information
+		// $scope will allow this to pass between controller and view
+		$scope.formData = {};
+
+		// process the form
+		$scope.processForm = function() {
+			$http({
+				method  : 'POST',
+				url     : 'index.php/angular/login',
+				data    : $.param($scope.formData),  // 发送表单
+				headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
+			})
+			.success(function(data) {
+				console.log(data);
+				if (!data.success) {
+					console.log(data);//如果错误显示错误信息
+					$scope.errorName = data.errors.name;
+					$scope.password = data.errors.password;
+					$scope.getback=data.errors.getback;
+				} else {
+					// 如果成功跳转
+					console.log(data);//如果成功跳转
+					$scope.message = data.message;
+					$scope.errorName = '';
+					$scope.password = '';
+					location.href="index.php/angular/mainpage";
+				}
+			});
+		};
+	});
+		
+</script>
+</head>
+
+<body ng-app="formApp" ng-controller="formController">
+
+<div class="am-g">
+	<div class="header">
+		<h1>森林位置服务系统</h1>
+		
+		
+	</div>
+</div>
+<div class="am-g">
+  <div class="am-u-lg-6 am-u-md-8 am-u-sm-centered">
+    <h3>登录</h3>
+    <hr>
+    <form name="userForm" class="am-form" ng-submit="processForm()">
+      <label for="number">用户名:</label>
+      <input type="text" name="" id="number" value="" ng-model="formData.name">
+		      <span class="help-block" ng-show="errorName">{{ errorName }}</span>
+      <br>
+      <label for="password">密码:</label>
+      <input type="password" name="" id="password" value="" ng-model="formData.password">
+			  <span class="help-block" ng-show="password">{{ password }}</span>
+      <br>
+      
+      <div class="am-cf">
+        <input type="submit" name="" value="登 录" class="am-btn am-btn-primary am-btn-sm am-fl">
+      </div>
+		<pre ng-show="getback">
+		{{ getback }}
+		</pre>
+    </form>
+    <hr>
+    <p>© 2015 林业信息化研究所.</p>
+	
+  </div>
+</div>
+
+</body>
+</html>

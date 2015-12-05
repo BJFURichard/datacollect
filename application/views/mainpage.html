@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<link rel="stylesheet" href="../../css/amazeui.css">
+
+<link rel="stylesheet" href="../../css/yanhao.css">
+<!-- LOAD ANGULAR -->
+<script src="../../js/angular.min.js"></script>
+<script src="//cdn.bootcss.com/jquery/2.1.4/jquery.js"></script>
+<script>
+// define angular module/app
+var memuApp = angular.module('memuApp', []);
+memuApp.controller("userController",function($scope,$http){
+	
+	$http.get("./getallusers")
+    .success(function(response) {$scope.peoples = response;});
+	$scope.getMarkersByDay=function(day){
+		alert(day);
+		alert($scope.curr_id);
+	}
+	$scope.getMarkers=function(ids){
+		$http.get("./getMarkers/", {params: {id:ids}})
+		.success(
+			function(response) 
+			{
+				if(response.length==0){
+					alert("该用户没有定位记录");
+					return;
+				}
+				$scope.curr_id=response[0].id;
+				$scope.users = '选择时间';
+				addDateToList(response);
+				//console.log(response);
+			}
+		);
+		
+	}
+	
+	$scope.getLatest=function(){
+		$http.get("./getAllLatest")
+		.success(
+			
+			function(response) 
+			{
+				$scope.users = '在线用户';
+				//console.log(response.length);
+				addLayerToMap(response);
+			}
+		);
+	}
+	$scope.getLatestLine=function(){
+		$http.get("./getAllLatestLine")
+		.success(
+			function(response)
+			{
+				if(response.length==0){
+					$scope.users = '尚无用户在线';
+				}else{
+					$scope.users = '用户运动轨迹';
+					//console.log(response.length);
+					addLayerToMap2(response);
+				}
+			}
+		);
+	}
+	$scope.getLatestLine();
+});
+
+</script>
+<style>
+.orange
+{
+    background-color: Orange;
+    color:White;
+}
+.admin-sidebar-list li a:hover{
+	background-color:#94cffb;
+}
+
+#userlist>li:hover{
+background-color:#94cffb;
+}
+</style>
+</head>
+
+<body ng-app="memuApp" ng-controller="userController">
+<header class="am-topbar">
+  <div class="am-topbar-brand">
+    <strong>森林位置服务系统</strong> <small> 林业信息化研究所</small>
+  </div>
+</header>
+<!--header end-->
+
+<div class="am-cf admin-main">
+  <!-- sidebar start -->
+  <div class="admin-sidebar am-offcanvas" id="admin-offcanvas">
+    <div class="am-offcanvas-bar admin-offcanvas-bar">
+      <ul class="am-list admin-sidebar-list">
+        
+        <li class="admin-parent">
+          <a class="am-cf" data-am-collapse="{target: '#collapse-nav'}"><span class="am-icon-file"></span> 森林调查人员 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
+          <ul class="am-list am-collapse admin-sidebar-sub" id="collapse-nav">
+			<li ng-repeat="x in peoples | filter:{'catalog':'1'}">
+				<a href="#" ng-click="getMarkers({{x.id}})"><span class="am-icon-calendar"></span> {{x.name}}<span class="am-badge am-badge-secondary am-margin-right am-fr">{{x.record}}</span></a>
+			</li>
+          </ul>
+        </li>
+		<li class="admin-parent">
+          <a class="am-cf" data-am-collapse="{target: '#collapse-stu'}"><span class="am-icon-file"></span> 护林员 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
+          <ul class="am-list am-collapse admin-sidebar-sub" id="collapse-stu">
+			<li ng-repeat="x in peoples | filter:{'catalog':'2'}">
+				<a href="#" ng-click="getMarkers({{x.id}})"><span class="am-icon-calendar"></span> {{x.name}}<span class="am-badge am-badge-secondary am-margin-right am-fr">{{x.record}}</span></a>
+			</li>
+          </ul>
+        </li>
+		<li class="admin-parent">
+          <a class="am-cf" data-am-collapse="{target: '#collapse-3'}"><span class="am-icon-file"></span> 林区工作人员 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
+          <ul class="am-list am-collapse admin-sidebar-sub" id="collapse-3">
+			<li ng-repeat="x in peoples | filter:{'catalog':'3'}">
+				<a href="#" ng-click="getMarkers({{x.id}})"><span class="am-icon-calendar"></span> {{x.name}}<span class="am-badge am-badge-secondary am-margin-right am-fr">{{x.record}}</span></a>
+			</li>
+          </ul>
+        </li>
+      </ul>
+	  <div class="am-panel am-panel-default admin-sidebar-panel" ng-show="users">
+        <div class="am-panel-bd">
+          <p><span class="am-icon-tag"></span> {{users}}</p>
+          <ul id="userList">
+		  </ul>
+        </div>
+      </div>
+      
+
+      
+	  
+    </div>
+  </div>
+  <!-- sidebar end -->
+  <div class="admin-content">
+	<div class="am-cf h700" id="mapcontainer">
+	<script src="//api.map.baidu.com/api?v=1.4" type="text/javascript"></script> 
+    <script src="../../js/mapshow.js" type="text/javascript"></script>
+    </div>
+  </div>
+</div>
+<!-- content end -->
+<!-- foot begin -->
+<a class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
+<footer>
+  <hr>
+  <p class="am-padding-left">© 2015 林业信息化研究所</p>
+</footer>
+<!-- foot end -->
+<!-- LOAD JQUERY -->
+
+<script src="http://amazeui.org/js/amazeui.js"></script>
+
+</body>
+</html>
