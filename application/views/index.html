@@ -1,111 +1,311 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html class="no-js">
 <head>
-<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<link rel="stylesheet" href="css/amazeui.css">
-<!-- LOAD JQUERY -->
-<script src="js/jquery.js"></script>
-<!-- LOAD ANGULAR -->
-<script src="js/angular.min.js"></script>
-<style>
-    .header {
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>林业信息化研究所 数据管理平台</title>
+
+  <!-- Set render engine for 360 browser -->
+  <meta name="renderer" content="webkit">
+
+  <!-- No Baidu Siteapp-->
+  <meta http-equiv="Cache-Control" content="no-siteapp"/>
+
+  <link rel="icon" type="image/png" href="assets/i/favicon.png">
+
+  <!-- Add to homescreen for Chrome on Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="icon" sizes="192x192" href="assets/i/app-icon72x72@2x.png">
+
+  <!-- Add to homescreen for Safari on iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+  <link rel="apple-touch-icon-precomposed" href="assets/i/app-icon72x72@2x.png">
+
+  <!-- Tile icon for Win8 (144x144 + tile color) -->
+  <meta name="msapplication-TileImage" content="assets/i/app-icon72x72@2x.png">
+  <meta name="msapplication-TileColor" content="#0e90d2">
+
+  <link rel="stylesheet" href="http://cdn.amazeui.org/amazeui/2.5.0/css/amazeui.css">
+  <link rel="stylesheet" href="http://cdn.amazeui.org/amazeui/2.5.0/css/amazeui.min.css">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <style>
+    .get {
+      background: #1E5B94;
+      color: #fff;
+      text-align: center;
+      padding: 100px 0;
+    }
+
+    .get-title {
+      font-size: 200%;
+      border: 2px solid #fff;
+      padding: 20px;
+      display: inline-block;
+    }
+
+    .get-btn {
+      background: #fff;
+    }
+
+    .detail {
+      background: #fff;
+    }
+
+    .detail-h2 {
+      text-align: center;
+      font-size: 150%;
+      margin: 40px 0;
+    }
+
+    .detail-h3 {
+      color: #1f8dd6;
+    }
+
+    .detail-p {
+      color: #7f8c8d;
+    }
+
+    .detail-mb {
+      margin-bottom: 30px;
+    }
+
+    .hope {
+      background: #0bb59b;
+      padding: 50px 0;
+    }
+
+    .hope-img {
       text-align: center;
     }
-    .header h1 {
-      font-size: 200%;
-      color: #333;
-      margin-top: 30px;
-    }
-    .header p {
-      font-size: 14px;
-    }
-	.help-block{color:red;}
-	pre{color:red;font-size: 14px;}
-	.am-topbar {
-	  position: relative;
-	  min-height: 50px;
-	  margin-bottom: 1.6rem;
-	  background: #94cffb;
-	  border-width: 0 0 1px;
-	  border-style: solid;
-	  border-color: #94cffb;
-	  color: #000;
-	}
-</style>
-<script>
-	// define angular module/app
-	var formApp = angular.module('formApp', []);
-	// create angular controller and pass in $scope and $http
-	formApp.controller("formController",function($scope, $http){
-		// create a blank object to hold our form information
-		// $scope will allow this to pass between controller and view
-		$scope.formData = {};
 
-		// process the form
-		$scope.processForm = function() {
-			$http({
-				method  : 'POST',
-				url     : 'index.php/angular/login',
-				data    : $.param($scope.formData),  // 发送表单
-				headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
-			})
-			.success(function(data) {
-				console.log(data);
-				if (!data.success) {
-					console.log(data);//如果错误显示错误信息
-					$scope.errorName = data.errors.name;
-					$scope.password = data.errors.password;
-					$scope.getback=data.errors.getback;
-				} else {
-					// 如果成功跳转
-					console.log(data);//如果成功跳转
-					$scope.message = data.message;
-					$scope.errorName = '';
-					$scope.password = '';
-					location.href="index.php/angular/mainpage";
-				}
-			});
-		};
-	});
-		
-</script>
+    .hope-hr {
+      border-color: #149C88;
+    }
+
+    .hope-title {
+      font-size: 140%;
+    }
+
+    .about {
+      background: #fff;
+      padding: 40px 0;
+      color: #7f8c8d;
+    }
+
+    .about-color {
+      color: #34495e;
+    }
+
+    .about-title {
+      font-size: 180%;
+      padding: 30px 0 50px 0;
+      text-align: center;
+    }
+
+    .footer p {
+      color: #7f8c8d;
+      margin: 0;
+      padding: 15px 0;
+      text-align: center;
+      background: #2d3e50;
+    }
+  </style>
+  
 </head>
+<body>
+<header class="am-topbar am-topbar-fixed-top">
+  <div class="am-container">
+    <h1 class="am-topbar-brand">
+      <a href="#">森林位置服务系统</a>
+    </h1>
 
-<body ng-app="formApp" ng-controller="formController">
+    <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-secondary am-show-sm-only"
+            data-am-collapse="{target: '#collapse-head'}"><span class="am-sr-only">导航切换</span> <span
+        class="am-icon-bars"></span></button>
 
-<div class="am-g">
-	<div class="header">
-		<h1>森林位置服务系统</h1>
-		
-		
+    <div class="am-collapse am-topbar-collapse" id="collapse-head">
+      <ul class="am-nav am-nav-pills am-topbar-nav">
+        <li class="am-active"><a href="#">首页</a></li>
+        <li><a href="http://202.204.121.60/">案例展示系统</a></li>
+      </ul>
+
+      
+
+      <div class="am-topbar-right">
+        <button class="am-btn am-btn-primary am-topbar-btn am-btn-sm" id="log-in"><span class="am-icon-user"></span> 登录</button>
+      </div>
+    </div>
+  </div>
+</header>
+<!--login windows starts-->
+<div class="am-modal am-modal-prompt" tabindex="-1" id="my-prompt" ng-app="formApp" ng-controller="formController">
+  <div class="am-modal-dialog">
+	<div class="am-modal-hd">Amaze UI</div>
+	<div class="am-container">
+		<div class="am-input-group">
+		  <span class="am-input-group-label"><i class="am-icon-user am-icon-fw"></i></span>
+		  <input id="username" type="text" class="am-form-field" placeholder="用户名">
+		</div>
+		<div class="am-input-group">
+		  <span class="am-input-group-label"><i class="am-icon-lock am-icon-fw"></i></span>
+		  <input id="password" type="password" class="am-form-field" placeholder="密码">
+		</div>
+	</div>
+	<hr/>
+	<div class="am-modal-footer">
+	  <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+	  <span class="am-modal-btn" data-am-modal-confirm>提交</span>
+	</div>
+  </div>
+</div>
+<!--login windows ends-->
+
+<div class="get">
+	<div class="am-g">
+		<div class="am-u-lg-12">
+			<h1 class="get-title">北京林业大学 林业信息化研究所</h1>
+		</div>
 	</div>
 </div>
-<div class="am-g">
-  <div class="am-u-lg-6 am-u-md-8 am-u-sm-centered">
-    <h3>登录</h3>
-    <hr>
-    <form name="userForm" class="am-form" ng-submit="processForm()">
-      <label for="number">用户名:</label>
-      <input type="text" name="" id="number" value="" ng-model="formData.name">
-		      <span class="help-block" ng-show="errorName">{{ errorName }}</span>
-      <br>
-      <label for="password">密码:</label>
-      <input type="password" name="" id="password" value="" ng-model="formData.password">
-			  <span class="help-block" ng-show="password">{{ password }}</span>
-      <br>
-      
-      <div class="am-cf">
-        <input type="submit" name="" value="登 录" class="am-btn am-btn-primary am-btn-sm am-fl">
+
+<div class="detail">
+  <div class="am-g am-container">
+    <div class="am-u-lg-12">
+      <h2 class="detail-h2">系统简介</h2>
+
+      <div class="am-g">
+        <div class="am-u-lg-3 am-u-md-6 am-u-sm-12 detail-mb">
+
+          <h3 class="detail-h3">
+            <i class="am-icon-mobile am-icon-sm"></i>
+            移动客户端
+          </h3>
+          <p class="detail-p">
+            本系统的移动端为一个安卓APP，在护林员巡护过程中，打开客户端便可自动向系统发送位置信息。
+          </p>
+        </div>
+        <div class="am-u-lg-3 am-u-md-6 am-u-sm-12 detail-mb">
+          <h3 class="detail-h3">
+            <i class="am-icon-cogs am-icon-sm"></i>
+            功能模块
+          </h3>
+
+          <p class="detail-p">
+			移动客户端除了发送位置信息以外，还可以进行树高测量和角规绕测。其中，角规绕测模块使用前需要进行完成校准。
+		  </p>
+        </div>
+		<div class="am-u-lg-3 am-u-md-6 am-u-sm-12 detail-mb">
+          <h3 class="detail-h3">
+            <i class="am-icon-send-o am-icon-sm"></i>
+            使用的主要技术
+          </h3>
+
+          <p class="detail-p">
+           在Web中，主要使用到了Amaze UI作为网站的前端开发框架，地图展示使用了百度地图的API。手机客户端基于Android开发，主要使用到的硬件设备有GPS模块、摄像头、加速度传感器，在角规成像时使用了OpenCV进行自动识别。
+          </p>
+        </div>
+        <div class="am-u-lg-3 am-u-md-6 am-u-sm-12 detail-mb">
+          <h3 class="detail-h3">
+            <i class="am-icon-check-square-o am-icon-sm"></i>
+            数据接口
+          </h3>
+
+          <p class="detail-p">
+			本系统所有的数据交互统一采用 JSON 格式。数据的接口暂时说明不对外公布，数据统一使用JSEND规范格式，如需了解JSEND请点击<a href="http://labs.omniti.com/labs/jsend">这里。</a>
+		  </p>
+        </div>
+        
       </div>
-		<pre ng-show="getback">
-		{{ getback }}
-		</pre>
-    </form>
-    <hr>
-    <p>© 2015 林业信息化研究所.</p>
-	
+    </div>
   </div>
 </div>
 
+<div class="hope">
+  <div class="am-g am-container">
+    <div class="am-u-lg-4 am-u-md-6 am-u-sm-12 hope-img">
+      <img src="assets/i/examples/landing.png" alt="" data-am-scrollspy="{animation:'slide-left', repeat: false}">
+      <hr class="am-article-divider am-show-sm-only hope-hr">
+    </div>
+    <div class="am-u-lg-8 am-u-md-6 am-u-sm-12">
+      <h2 class="hope-title">同我们一起为林业信息化努力</h2>
+
+      <p>
+        在信息技术高速发展的年代，我们不愿成为知识的过客，拥抱剧烈的变化，发挥技术的力量，推荐林业的信息化，数字化。
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<footer class="footer">
+  <p>© 2015 <a href="#" target="_blank">林业信息化研究所. &nbsp;</a> 
+  Licensed under<a href="#" target="_blank">&nbsp;MIT license</a>. by 颜灏.</p>
+</footer>
+
+<!--[if lt IE 9]>
+<script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+<script src="assets/js/polyfill/rem.min.js"></script>
+<script src="assets/js/polyfill/respond.min.js"></script>
+<script src="assets/js/amazeui.legacy.js"></script>
+<![endif]-->
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/amazeui.min.js"></script>
+
+<!--在这里编写你的代码-->
+<script>
+	$(function() {
+		$('#log-in').on('click', function() {
+			$('#my-prompt').modal({
+			  relatedTarget: this,
+			  onConfirm: function(e) {
+				
+				$.ajax({
+					dataType:"json",
+					type:"POST",
+					url: 'index.php/angular/login',
+					data:{
+						name: $("#username").val(),
+						password: $("#password").val()
+					},
+					success:function(data){
+						if(data.success==1)
+						{
+							alert(data.success);
+							location.href="index.php/angular/mainpage";
+						}
+						else
+						{
+							alert(data.errors)
+						}
+					},
+					error:function(data){
+						alert("Error");
+					}
+				});
+				
+			  },
+			  onCancel: function(e) {
+				
+			  }
+			});
+		});
+	});
+</script>
+
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--<![endif]-->
+<!--[if lte IE 8 ]>
+<script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+<![endif]-->
 </body>
 </html>

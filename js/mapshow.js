@@ -198,7 +198,7 @@ function a(id,day){
 				date: day,
 			},
 			function(data){
-			console.log(data);
+				console.log(data);
 				var sdata = [{}]; //初始化对象数组
 				var j=0;
 				map.clearOverlays(); 

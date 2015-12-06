@@ -23,7 +23,7 @@ class Angular extends CI_Controller {
 			$this->load->model("Admin");
 			$query=$this->Admin->user_select($_REQUEST['name'],$_REQUEST['password']);
 			if($query->num_rows()>0){
-				$data['success'] = true;
+				$data['success'] = 1;
 				$data['message'] = 'Success!';
 			}else{
 				$data['success'] = false;
@@ -41,17 +41,16 @@ class Angular extends CI_Controller {
 		$data 			= array(); 		// array to pass back data
 		// validate the variables ======================================================
 		if (empty($_REQUEST['name']))
-			$errors['name'] = '用户名为空.';
+			$errors = '用户名为空.';
 
 		if (empty($_REQUEST['password']))
-			$errors['password'] = '密码为空.';
+			$errors = '密码为空.';
 		if ( ! empty($errors)) {
 
 			// if there are items in our errors array, return those errors
 			$data['success'] = false;
 			$data['errors']  = $errors;
 		} else {
-
 			// 用户名密码正确访问数据库判断是否登录
 			$this->load->model("Admin");
 			$query=$this->Admin->user_select($_REQUEST['name'],$_REQUEST['password']);
@@ -60,8 +59,8 @@ class Angular extends CI_Controller {
 				$data['message'] = 'Success!';
 			}else{
 				$data['success'] = false;
-				$errors['getback'] =  '用户名或密码错误!';
-				$data['errors'] =$errors;
+				$errors = '用户名或密码错误.';
+				$data['errors']  = $errors;
 			}
 			
 		}
