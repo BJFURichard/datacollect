@@ -116,7 +116,7 @@
       background: #2d3e50;
     }
   </style>
-  
+
 </head>
 <body>
 <header class="am-topbar am-topbar-fixed-top">
@@ -135,7 +135,7 @@
         <li><a href="http://202.204.121.60/">案例展示系统</a></li>
       </ul>
 
-      
+
 
       <div class="am-topbar-right">
         <button class="am-btn am-btn-primary am-topbar-btn am-btn-sm" id="log-in"><span class="am-icon-user"></span> 登录</button>
@@ -162,6 +162,17 @@
 	  <span class="am-modal-btn" data-am-modal-cancel>取消</span>
 	  <span class="am-modal-btn" data-am-modal-confirm>提交</span>
 	</div>
+  </div>
+</div>
+<!--login windows ends-->
+<!--secken windows starts-->
+<div class="am-modal am-modal-prompt" tabindex="-1" id="my-secken" style=" width: 300, height: 300">
+  <div class="am-modal-dialog">
+  	<div class="am-modal-hd">扫码登录</div>
+  	<div class="am-container">
+  		<p id="qrcode" style="text-align: center;"></p>
+  	</div>
+
   </div>
 </div>
 <!--login windows ends-->
@@ -220,7 +231,7 @@
 			本系统所有的数据交互统一采用 JSON 格式。数据的接口暂时说明不对外公布，数据统一使用JSEND规范格式，如需了解JSEND请点击<a href="http://labs.omniti.com/labs/jsend">这里。</a>
 		  </p>
         </div>
-        
+
       </div>
     </div>
   </div>
@@ -244,7 +255,7 @@
 
 
 <footer class="footer">
-  <p>© 2015 <a href="#" target="_blank">林业信息化研究所. &nbsp;</a> 
+  <p>© 2015 <a href="#" target="_blank">林业信息化研究所. &nbsp;</a>
   Licensed under<a href="#" target="_blank">&nbsp;MIT license</a>. by 颜灏.</p>
 </footer>
 
@@ -261,13 +272,13 @@
 <script src="assets/js/amazeui.min.js"></script>
 
 <!--在这里编写你的代码-->
-<script>
+<!-- <script>
 	$(function() {
 		$('#log-in').on('click', function() {
 			$('#my-prompt').modal({
 			  relatedTarget: this,
 			  onConfirm: function(e) {
-				
+
 				$.ajax({
 					dataType:"json",
 					type:"POST",
@@ -290,10 +301,96 @@
 						alert("Error");
 					}
 				});
-				
+
 			  },
 			  onCancel: function(e) {
-				
+
+			  }
+			});
+		});
+	});
+</script> -->
+<script>
+var event_id = '';
+function change_ac(){
+    var ac = 'qrcode_for_auth';
+    var auth_type = 1;
+
+    $.get('/secken/demo/controller/ac.php',{'ac':ac,'auth_type':auth_type}, function(resp){
+        var r = eval(resp);
+        if(r.status == 200){
+            var h = '';
+                h += '<img src="'+r.qrcode_url+'" with="250px" height="250px"/>';
+                h += '<p id="tip">请使用洋葱APP扫一扫</p>'
+                $('#qrcode').html(h);
+
+                event_id = r.event_id;
+                //开始调取获取事件结果接口
+                get_event_result();
+        }else{
+            alert(r.description);
+        }
+    },'json');
+}
+
+function get_event_result(){
+    $.get('/secken/demo/controller/ac.php',{'ac':'event_result', 'event_id':event_id},function(resp){
+        var r = eval(resp);
+
+        $('#tip').html(r.description);
+        if(r.status == 200){
+            //开始绑定
+            bind_user(r.uid);
+            return;
+        }
+
+        setTimeout('get_event_result()', 3000);
+
+    },'json')
+}
+
+function bind_user(yangcong_uid){
+    $.post('/secken/demo/controller/check_bind.php', {'yangcong_uid':yangcong_uid}, function(resp){
+        if(resp == 1){
+            location.href = "index.php/angular/mainpage";
+        }else{
+            location.href = '/secken/demo/bind.html';
+        }
+    });
+}
+	$(function() {
+		$('#log-in').on('click', function() {
+      change_ac();
+			$('#my-secken').modal({
+			  relatedTarget: this,
+			  onConfirm: function(e) {
+
+				$.ajax({
+					dataType:"json",
+					type:"POST",
+					url: 'index.php/angular/login',
+					data:{
+						name: $("#username").val(),
+						password: $("#password").val()
+					},
+					success:function(data){
+						if(data.success==1)
+						{
+							location.href="index.php/angular/mainpage";
+						}
+						else
+						{
+							alert(data.errors)
+						}
+					},
+					error:function(data){
+						alert("Error");
+					}
+				});
+
+			  },
+			  onCancel: function(e) {
+
 			  }
 			});
 		});
