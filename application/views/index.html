@@ -316,7 +316,7 @@ function change_ac(){
     var ac = 'qrcode_for_auth';
     var auth_type = 1;
 
-    $.get('/secken/demo/controller/ac.php',{'ac':ac,'auth_type':auth_type}, function(resp){
+    $.get('/secken/controller/ac.php',{'ac':ac,'auth_type':auth_type}, function(resp){
         var r = eval(resp);
         if(r.status == 200){
             var h = '';
@@ -334,7 +334,7 @@ function change_ac(){
 }
 
 function get_event_result(){
-    $.get('/secken/demo/controller/ac.php',{'ac':'event_result', 'event_id':event_id},function(resp){
+    $.get('/secken/controller/ac.php',{'ac':'event_result', 'event_id':event_id},function(resp){
         var r = eval(resp);
 
         $('#tip').html(r.description);
@@ -350,11 +350,11 @@ function get_event_result(){
 }
 
 function bind_user(yangcong_uid){
-    $.post('/secken/demo/controller/check_bind.php', {'yangcong_uid':yangcong_uid}, function(resp){
+    $.post('/secken/controller/check_bind.php', {'yangcong_uid':yangcong_uid}, function(resp){
         if(resp == 1){
             location.href = "index.php/angular/mainpage";
         }else{
-            location.href = '/secken/demo/bind.html';
+            location.href = '/secken/bind.html';
         }
     });
 }
